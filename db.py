@@ -6,16 +6,17 @@ client = MongoClient("mongodb+srv://PiercePhillips:Seth0085@ee461l-project.lloci
 db = client.EE461L_db
 
 #DB Collections
-users = db.users
+user_accts = db.user_accts
+user_projects = db.user_projects
 hw_sets = db.hw_sets
 
-#----------Users DB Functions----------#
+#----------User Accounts DB Functionality----------#
 
 #function to process user login attempt
 #@params: user credentials to query and authenticate
 #@return: None if user not found in db, else return user data
 def login(username, password):
-    user = users.find_one({ "username": username })
+    user = user_accts.find_one({ "username": username })
 
     #user not found in db
     if user is None:
@@ -32,7 +33,7 @@ def login(username, password):
 #@params: new user data to be stored
 def create_acct(username, password):
     #make sure username is not already taken
-    if users.find_one({ 'username': username }) is not None:
+    if user_accts.find_one({ 'username': username }) is not None:
         return None
     
     #generate salt & encrypt user password before storing in db
@@ -40,10 +41,11 @@ def create_acct(username, password):
     encrypted_password = encrypt_password(password, salt)
 
     #store user details in db
-    return users.insert_one({
-        "username": username,
-        "password": encrypted_password,
-        "salt": salt
+    return user_accts.insert_one({
+        'username': username,
+        'password': encrypted_password,
+        'salt': salt,
+        'project_ids': []
     })
 
 #function to hash salted user password
@@ -62,7 +64,22 @@ def validate_password(user, password):
     else:
         return False
 
-#----------HW Set DB Functions----------#
+#----------User Projects DB Functionality----------#
+
+#function to create a new project and store reference in user doc
+def create_project(user, project_name, project_id, description):
+    proj = user_projects.insert_one({
+        'user': user,
+        'project_name': project_name,
+        'project_id': project_id,
+        'description': description
+    })
+    #store project id in respective user entry
+    user_accts.find_one_and_update(
+        { 'username': user }, 
+        { '$push': { 'project_ids': proj.inserted_id } })
+
+#----------HW Set DB Functionality----------#
 
 #function to create a new HW set with set capacity
 def create_hw_set(name, capacity):
