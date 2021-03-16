@@ -1,12 +1,15 @@
-from pymongo import MongoClient
+from pymongo import MongoClient, ReturnDocument
 import hashlib, uuid
 
-#establish db connection
+#DB Connection
 client = MongoClient("mongodb+srv://PiercePhillips:Seth0085@ee461l-project.lloci.mongodb.net/test_db?retryWrites=true&w=majority")
 db = client.EE461L_db
-#necessary collections for project
+
+#DB Collections
 users = db.users
 hw_sets = db.hw_sets
+
+#----------Users DB Functions----------#
 
 #function to process user login attempt
 #@params: user credentials to query and authenticate
@@ -29,7 +32,7 @@ def login(username, password):
 #@params: new user data to be stored
 def create_acct(username, password):
     #make sure username is not already taken
-    if users.find_one({ 'username': username }) is None:
+    if users.find_one({ 'username': username }) is not None:
         return None
     
     #generate salt & encrypt user password before storing in db
@@ -37,12 +40,11 @@ def create_acct(username, password):
     encrypted_password = encrypt_password(password, salt)
 
     #store user details in db
-    user_entry = {
+    return users.insert_one({
         "username": username,
         "password": encrypted_password,
         "salt": salt
-    }
-    users.insert(user_entry)
+    })
 
 #function to hash salted user password
 #@params: password and salt
@@ -59,3 +61,27 @@ def validate_password(user, password):
         return True
     else:
         return False
+
+#----------HW Set DB Functions----------#
+
+#function to create a new HW set with set capacity
+def create_hw_set(name, capacity):
+    hw_sets.insert_one({
+        'name': name,
+        'capacity': capacity,
+        'availability': capacity
+    })
+
+#function to allow user to check out a HW set
+def checkout_hw_set(name, qty):
+    return hw_sets.find_one_and_update(
+        { 'name': name },
+        { '$inc': { 'availability': -qty } },
+        return_document=ReturnDocument.AFTER)
+
+#function to allow user to check in a HW set
+def checkin_hw_set(name, qty):
+    return hw_sets.find_one_and_update(
+        { 'name': name },
+        { '$inc': { 'availability': qty } },
+        return_document=ReturnDocument.AFTER)
