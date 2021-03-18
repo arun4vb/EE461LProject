@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import './nav-bar.css'
 
 class Nav extends Component {
@@ -8,7 +9,9 @@ class Nav extends Component {
                 <div class="container-fluid">
                     <div class="navbar-header">
                         <a class="navbar-brand" href="#">
-                            <img class="resize" alt="Snowflake" src="http://assets.stickpng.com/thumbs/5846a02acef1014c0b5e47fa.png"></img>
+                            <Link to="/">
+                                <img class="resize" alt="Snowflake" src="http://assets.stickpng.com/thumbs/5846a02acef1014c0b5e47fa.png"></img>
+                            </Link>
                         </a>
                     </div>
 
@@ -23,7 +26,8 @@ class Nav extends Component {
                             <li><a href="#">Share</a></li>
                             <li><a href="#">About</a></li>
                             <li class="news-link"><a href="#">News</a></li>
-                            <button type="button" class="btn btn-default navbar-btn">Log In</button>
+                            <Link to="/login" type="button" className="btn btn-default navbar-btn">Log In</Link>
+                            {/* <button type="button" class="btn btn-default navbar-btn">Log In</button> */}
                         </ul>
                     </div>
                 </div>
