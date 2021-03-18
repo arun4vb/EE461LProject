@@ -21,3 +21,12 @@
 .news-link {
     padding-right: 20px;
 }
+.hover a{
+    color: grey;
+    text-decoration: none;
+}
+
+
+a:hover, a:active, a:focus {
+    color: black;
+  }

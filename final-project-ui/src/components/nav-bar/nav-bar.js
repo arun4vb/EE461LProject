@@ -22,8 +22,10 @@ class Nav extends Component {
                         <form class="navbar-form navbar-left">
                         </form>
                         <ul class="nav navbar-nav navbar-right">
-                            <li><a href="#">Find</a></li>
-                            <li><a href="#">Share</a></li>
+                            
+                            
+                            <li class="hover"><Link to="/hw-set"><a href="#">Homework Sets</a></Link></li>
+                            <li class="hover"><Link to="/projects"><a href="#">Projects</a></Link></li>
                             <li><a href="#">About</a></li>
                             <li class="news-link"><a href="#">News</a></li>
                             <Link to="/login" type="button" className="btn btn-default navbar-btn">Log In</Link>
