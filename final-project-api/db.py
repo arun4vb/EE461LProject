@@ -1,4 +1,5 @@
 from pymongo import MongoClient, ReturnDocument
+from bson.json_util import loads, dumps
 import hashlib, uuid
 
 #DB Connection
@@ -24,14 +25,14 @@ def login(username, password):
     #validate user credentials
     else:
         if validate_password(user, password) is True:
-            return user
+            return dumps(user)  #JSONify MongoDB BSON
         else:
             return None
 
 
 #function to create db entry for new user
 #@params: new user data to be stored
-def create_acct(username, password):
+def create_acct(email, username, password):
     #make sure username is not already taken
     if user_accts.find_one({ 'username': username }) is not None:
         return None
@@ -43,6 +44,7 @@ def create_acct(username, password):
     #store user details in db
     return user_accts.insert_one({
         'username': username,
+        'email': email,
         'password': encrypted_password,
         'salt': salt,
         'project_ids': []

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './login.css'
 import { useSpring, animated } from "react-spring";
+import axios from 'axios'
 
 function Login() {
     const [registrationFormStatus, setRegistartionFormStatus] = useState(false);
@@ -48,12 +49,12 @@ function Login() {
           </animated.button>
         </div>
         <div className="form-group">
-          <animated.form action="" id="loginform" style={loginProps}>
+          <animated.div action="" id="loginform" style={loginProps}>
             <LoginForm />
-          </animated.form>
-          <animated.form action="" id="registerform" style={registerProps}>
+          </animated.div>
+          <animated.div action="" id="registerform" style={registerProps}>
             <RegisterForm />
-          </animated.form>
+          </animated.div>
         </div>
         <animated.div className="forgot-panel" style={loginProps}>
           <a herf="#">Forgot your password</a>
@@ -74,20 +75,56 @@ function Login() {
     );
   }
   
-  function RegisterForm() {
-    return (
-      <React.Fragment>
-        <label for="fullname">full name</label>
-        <input type="text" id="fullname" />
-        <label for="email">email</label>
-        <input type="text" id="email" />
-        <label for="password">password</label>
-        <input type="text" id="password" />
-        <label for="confirmpassword">confirm password</label>
-        <input type="text" id="confirmpassword" />
-        <input type="submit" value="submit" class="submit" />
-      </React.Fragment>
-    );
+  class RegisterForm extends React.Component {
+    constructor(props) {
+      super(props);
+      //form fields
+      this.state = {
+        username: "",
+        email: "",
+        password: "",
+      }
+      this.handleChange = this.handleChange.bind(this);
+      this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    //update form fields as user types
+    handleChange(event) {
+      this.setState({
+        [event.target.id]: event.target.value
+      });
+      console.log(this.state.email, this.state.password);
+    }
+
+    //send POST request to API
+    handleSubmit(event) {
+      event.preventDefault();
+      const registration = {
+        username: this.state.username,
+        email: this.state.email,
+        password: this.state.password
+      };
+      axios.post("/api/login", registration).then(res => {
+        console.log(res);
+        console.log(res.data);
+      })
+    }
+
+    render () {
+      return (
+        <form name="registration_form" onSubmit={this.handleSubmit}>
+          <label for="email">email</label>
+          <input type="text" id="email" value={this.state.email} onChange={this.handleChange} />
+          <label for="username">username</label>
+          <input type="text" id="username" value={this.state.username} onChange={this.handleChange} />
+          <label for="password">password</label>
+          <input type="text" id="password" value={this.state.password} onChange={this.handleChange} />
+          <label for="confirmpassword">confirm password</label>
+          <input type="text" id="confirmpassword" />
+          <input type="submit" value="submit" class="submit" />
+        </form>
+      );
+    }
   }
   
   export default Login;
