@@ -4,8 +4,11 @@ import './projects.css'
 
 class Projects extends Component {
   render() {
+    //testing sessionStorage on different route - works as expected
+    var user = JSON.parse(window.sessionStorage.getItem("user"));
+    var username = user.username
     return (
-      <h1>projects</h1>
+      <h1>Hello, {username}!</h1>
     )
   }
 }

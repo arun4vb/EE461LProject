@@ -57,23 +57,59 @@ function Login() {
           </animated.div>
         </div>
         <animated.div className="forgot-panel" style={loginProps}>
-          <a herf="#">Forgot your password</a>
+          <a herf="#">Forgot your password?</a>
         </animated.div>
       </div>
     );
   }
   
-  function LoginForm() {
-    return (
-      <React.Fragment>
-        <label for="username">USERNAME</label>
-        <input type="text" id="username" />
-        <label for="password">PASSWORD</label>
-        <input type="text" id="password" />
-        <input type="submit" value="submit" className="submit" />
-      </React.Fragment>
-    );
+  class LoginForm extends React.Component {
+    constructor(props) {
+      super(props);
+      //form fields
+      this.state = {
+        username: "",
+        password: "",
+      }
+      this.handleChange = this.handleChange.bind(this);
+      this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    //update form fields as user types
+    handleChange(event) {
+      this.setState({
+        [event.target.id]: event.target.value
+      });
+    }
+
+    //send POST request to API
+    handleSubmit(event) {
+      event.preventDefault();
+      const loginRequest = {
+        username: this.state.username,
+        password: this.state.password
+      };
+      axios.post("/api/login", loginRequest).then(res => {
+        window.sessionStorage.setItem("user", JSON.stringify(res.data)); //store user data for use throughout app
+        console.log(JSON.parse(window.sessionStorage.getItem("user"))); //DEBUG
+      }).catch((response) => {
+        console.log("invalid login credentials");
+      });
+    }
+
+    render () {
+      return (
+        <form name="login_form" onSubmit={this.handleSubmit}>
+          <label for="username">username</label>
+          <input type="text" id="username" value={this.state.username} onChange={this.handleChange} />
+          <label for="password">password</label>
+          <input type="text" id="password" value={this.state.password} onChange={this.handleChange} />
+          <input type="submit" value="submit" class="submit" />
+        </form>
+      );
+    }
   }
+
   
   class RegisterForm extends React.Component {
     constructor(props) {
@@ -93,7 +129,6 @@ function Login() {
       this.setState({
         [event.target.id]: event.target.value
       });
-      console.log(this.state.email, this.state.password);
     }
 
     //send POST request to API
@@ -104,10 +139,12 @@ function Login() {
         email: this.state.email,
         password: this.state.password
       };
-      axios.post("/api/login", registration).then(res => {
+      axios.post("/api/register", registration).then(res => {
         console.log(res);
         console.log(res.data);
-      })
+      }).catch((response) => {
+        console.log("username already taken")
+      });
     }
 
     render () {

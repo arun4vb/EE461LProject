@@ -34,7 +34,7 @@ def login(username, password):
 #@params: new user data to be stored
 def create_acct(email, username, password):
     #make sure username is not already taken
-    if user_accts.find_one({ 'username': username }) is not None:
+    if user_accts.find_one({ 'username': username }) is not None or user_accts.find_one({ 'email': email.lower() }) is not None:
         return None
     
     #generate salt & encrypt user password before storing in db
@@ -44,7 +44,7 @@ def create_acct(email, username, password):
     #store user details in db
     return user_accts.insert_one({
         'username': username,
-        'email': email,
+        'email': email.lower(),
         'password': encrypted_password,
         'salt': salt,
         'project_ids': []
