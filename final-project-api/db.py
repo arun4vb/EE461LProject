@@ -1,4 +1,5 @@
 from pymongo import MongoClient, ReturnDocument
+from bson.json_util import loads, dumps
 import hashlib, uuid
 
 #DB Connection
@@ -24,16 +25,16 @@ def login(username, password):
     #validate user credentials
     else:
         if validate_password(user, password) is True:
-            return user
+            return dumps(user)  #JSONify MongoDB BSON
         else:
             return None
 
 
 #function to create db entry for new user
 #@params: new user data to be stored
-def create_acct(username, password):
+def create_acct(email, username, password):
     #make sure username is not already taken
-    if user_accts.find_one({ 'username': username }) is not None:
+    if user_accts.find_one({ 'username': username }) is not None or user_accts.find_one({ 'email': email.lower() }) is not None:
         return None
     
     #generate salt & encrypt user password before storing in db
@@ -43,6 +44,7 @@ def create_acct(username, password):
     #store user details in db
     return user_accts.insert_one({
         'username': username,
+        'email': email.lower(),
         'password': encrypted_password,
         'salt': salt,
         'project_ids': []
@@ -78,6 +80,19 @@ def create_project(user, project_name, project_id, description):
     user_accts.find_one_and_update(
         { 'username': user }, 
         { '$push': { 'project_ids': proj.inserted_id } })
+
+#function to return all projects that belong to a user
+#@return: list of all projects pertaining to user in JSON format
+def get_user_projects(username):
+    projects = []
+    user = user_accts.find_one({ 'username': username })
+
+    for proj_id in user['project_ids']:
+        proj = user_projects.find_one({ '_id': proj_id })
+        del proj['_id']
+        projects.append(proj)
+    
+    return dumps({ 'projects': projects })
 
 #----------HW Set DB Functionality----------#
 

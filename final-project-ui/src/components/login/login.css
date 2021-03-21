@@ -101,9 +101,15 @@ html,body, body * {
 
     /*Form positioning and animation */
 
-    form#registerform {
+    div#registerform {
         left:500px;
         top:-230px;
+        position:relative;
+    }
+
+    div#loginform {
+        left:0px;
+        top:0px;
         position:relative;
     }
 
@@ -112,10 +118,6 @@ html,body, body * {
         color:gray;
     }
 
-    form, .forgot-panel { 
-        position: relative;
-        transition: all .5s ease;
-    }
     #loginBtn, #registerBtn {
         transition: all .5s ease;
 
