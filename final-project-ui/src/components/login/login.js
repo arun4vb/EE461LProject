@@ -83,6 +83,7 @@ function Login() {
     }
 
     //send POST request to API
+    //TODO: redirect user after successful login? Change login button?
     handleSubmit(event) {
       event.preventDefault();
       const loginRequest = {

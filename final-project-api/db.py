@@ -81,6 +81,19 @@ def create_project(user, project_name, project_id, description):
         { 'username': user }, 
         { '$push': { 'project_ids': proj.inserted_id } })
 
+#function to return all projects that belong to a user
+#@return: list of all projects pertaining to user in dict format
+def get_user_projects(username):
+    projects = []
+    user = user_accts.find_one({ 'username': username })
+
+    for proj_id in user['project_ids']:
+        proj = user_projects.find_one({ '_id': proj_id })
+        del proj['_id']
+        projects.append(proj)
+    
+    return dumps({ 'projects': projects })
+
 #----------HW Set DB Functionality----------#
 
 #function to create a new HW set with set capacity
