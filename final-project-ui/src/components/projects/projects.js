@@ -15,29 +15,40 @@ class Projects extends Component {
         email: "",
         password: "",
       },
-      projects: []  //array of JSON objects representing a project
+      projects: [],  //array of JSON objects representing a project
+      isLoggedIn: false
     };
   }
 
   //load user projects when component loads
   //really ugly, just seeing if general idea/backend works
   componentDidMount() {
-    this.setState({
-      user: JSON.parse(window.sessionStorage.getItem("user"))}, () => {
-        axios.post("/api/loadprojects", this.state.user).then(res => {
-          const projects = res.data['projects'];
-          this.setState({ projects: projects });
-        });
-      }
-    );
+    if (window.sessionStorage.getItem("user")) {
+      this.setState({
+        isLoggedIn: true,
+        user: JSON.parse(window.sessionStorage.getItem("user"))}, () => {
+          axios.post("/api/loadprojects", this.state.user).then(res => {
+            const projects = res.data['projects'];
+            this.setState({ projects: projects });
+          });
+        }
+      );
+    }
   }
 
   render() {
-    //testing sessionStorage on different route - works as expected
+    //make sure user is logged in before attempting to render username
+    const isLoggedIn = this.state.isLoggedIn;
+    let text;
+    if (isLoggedIn) {
+      text = <h1>Hello, {this.state.user.username}!</h1>;
+    } else {
+      text = <h1>Log in to view your projects</h1>
+    }
 
     return (
       <>
-        <h1>Hello, {this.state.user.username}!</h1>
+        {text}
         <h2>Projects</h2>
         <ul className="list-group">
           {this.state.projects.map(project => (
