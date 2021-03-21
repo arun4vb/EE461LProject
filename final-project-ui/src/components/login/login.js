@@ -10,7 +10,7 @@ function Login() {
     const registerProps = useSpring({
       left: registrationFormStatus ? 0 : 500, // Register form sliding positions 
     });
-  
+    
     const loginBtnProps = useSpring({
       borderBottom: registrationFormStatus 
         ? "solid 0px transparent"
