@@ -38,10 +38,15 @@ def login():
 #function to collect and return user projects
 #@params: username with which to query database
 #@return: JSON containing array of all projects in JSON form
-def loadprojects():
+def load_projects():
     request_data = request.json
     projects = db.get_user_projects(request_data['username'])
     return Response(projects, 200)
+
+@app.route('/api/loadhwsets', methods=['GET'])
+def load_hw_sets():
+    hw_sets = db.get_hw_sets()
+    return Response(hw_sets, 200)
 
 if __name__ == '__main__':
     app.run(debug=True)

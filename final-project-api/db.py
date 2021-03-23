@@ -104,6 +104,11 @@ def create_hw_set(name, capacity):
         'availability': capacity
     })
 
+#function to return data on all hw sets
+def get_hw_sets():
+    sets = [x for x in hw_sets.find({}, {'_id': 0 })]
+    return dumps({ 'hw_sets': sets })
+
 #function to allow user to check out a HW set
 def checkout_hw_set(name, qty):
     return hw_sets.find_one_and_update(
