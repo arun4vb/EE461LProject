@@ -11,7 +11,9 @@ user_accts = db.user_accts
 user_projects = db.user_projects
 hw_sets = db.hw_sets
 
+
 #----------User Accounts DB Functionality----------#
+
 
 #function to process user login attempt
 #@params: user credentials to query and authenticate
@@ -50,12 +52,14 @@ def create_acct(email, username, password):
         'project_ids': []
     })
 
+
 #function to hash salted user password
 #@params: password and salt
 #@return: encrypted password
 def encrypt_password(password, salt):
     input = password.encode('utf-8') + salt.encode('utf-8')
     return hashlib.sha512(input).hexdigest()
+
 
 #function to determine if user-entered password matches db entry
 #@params: db-queried user data and user-entered password
@@ -66,7 +70,9 @@ def validate_password(user, password):
     else:
         return False
 
+
 #----------User Projects DB Functionality----------#
+
 
 #function to create a new project and store reference in user doc
 def create_project(user, project_name, project_id, description):
@@ -81,6 +87,7 @@ def create_project(user, project_name, project_id, description):
         { 'username': user }, 
         { '$push': { 'project_ids': proj.inserted_id } })
 
+
 #function to return all projects that belong to a user
 #@return: list of all projects pertaining to user in JSON format
 def get_user_projects(username):
@@ -94,7 +101,9 @@ def get_user_projects(username):
     
     return dumps({ 'projects': projects })
 
+
 #----------HW Set DB Functionality----------#
+
 
 #function to create a new HW set with set capacity
 def create_hw_set(name, capacity):
@@ -104,21 +113,32 @@ def create_hw_set(name, capacity):
         'availability': capacity
     })
 
+
 #function to return data on all hw sets
 def get_hw_sets():
     sets = [x for x in hw_sets.find({}, {'_id': 0 })]
     return dumps({ 'hw_sets': sets })
 
+
 #function to allow user to check out a HW set
+#as of right now, returns no data if requested more than available
 def checkout_hw_set(name, qty):
-    return hw_sets.find_one_and_update(
-        { 'name': name },
-        { '$inc': { 'availability': -qty } },
-        return_document=ReturnDocument.AFTER)
+    #check if requested amount is available
+    #if not, return None
+    hw_set = hw_sets.find_one({ 'name': name })
+
+    if hw_set['availability'] - qty < 0:
+        return None
+    else:
+        return dumps(hw_sets.find_one_and_update(
+            { 'name': name },
+            { '$inc': { 'availability': -qty } },
+            return_document=ReturnDocument.AFTER))
+
 
 #function to allow user to check in a HW set
 def checkin_hw_set(name, qty):
-    return hw_sets.find_one_and_update(
+    return dumps(hw_sets.find_one_and_update(
         { 'name': name },
         { '$inc': { 'availability': qty } },
-        return_document=ReturnDocument.AFTER)
+        return_document=ReturnDocument.AFTER))
