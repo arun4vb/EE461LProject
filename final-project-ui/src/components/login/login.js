@@ -31,6 +31,7 @@ function Login() {
     }
   
     return (
+        
       <div className="login-register-wrapper">
         <div className="nav-buttons">
           <animated.button

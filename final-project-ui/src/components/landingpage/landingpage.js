@@ -5,6 +5,7 @@ import './landingpage.css'
 class Landing extends Component {
     render() {
         return (
+
             <div class="banner" style={{ width: '100%', margin: 'auto' }}>
                 <Grid className="landing-grid">
                     <Cell col={12}>
@@ -23,18 +24,12 @@ class Landing extends Component {
 
                             <div className="social-links">
 
-                                <div class="btn-group btn-group-justified" role="group">
-                                    <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-default">Data</button>
-                                    </div>
-                                    <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-default">Software</button>
-                                    </div>
-                                    <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-default">Challenges</button>
-                                    </div>
-                                    <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-default">Tutorials</button>
+                                <div class="mx-auto">
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <button type="button" class="btn btn-secondary">Data</button>
+                                        <button type="button" class="btn btn-secondary">Software</button>
+                                        <button type="button" class="btn btn-secondary">Challenges</button>
+                                        <button type="button" class="btn btn-secondary">Tutorials</button>
                                     </div>
                                 </div>
 

@@ -8,24 +8,32 @@
 }
 
 .sf-heading {
-    padding-top: 15px;
-    padding-left: 10px;
+    padding-top: 4px;
+    padding-left: 1px;
     font-size: 25px;
     font-family: "Bradley Hand";
 }
 
-.navbar-default {
+.navbar {
     background-color: whitesmoke;
+}
+
+.full-nav {
+    padding-bottom: 20px;
 }
 
 .news-link {
     padding-right: 20px;
 }
-.hover a{
+
+.nav-item a{
     color: grey;
     text-decoration: none;
 }
 
+.justify-content-end {
+    padding-left: 770px;
+}
 
 a:hover, a:active, a:focus {
     color: black;

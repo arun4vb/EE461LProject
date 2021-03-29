@@ -10,7 +10,7 @@ html,body, body * {
  }
 
  body {
-    background-image: url("https://www.mycreativeshop.com/learn/wp-content/uploads/2019/10/technology-halftone-modern-background.jpg");
+    /* background-image: url("https://www.mycreativeshop.com/learn/wp-content/uploads/2019/10/technology-halftone-modern-background.jpg"); */
     position: fixed;
     background-size:  cover;
     background-position:center center;
