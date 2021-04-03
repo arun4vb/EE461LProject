@@ -122,3 +122,20 @@ html,body, body * {
         transition: all .5s ease;
 
     }
+    
+    #login-errormsg {
+        box-sizing: border-box;
+        color:#a94442;
+        background-color:#f2dede;
+        border-color:#ebccd1
+    }
+    
+    .has-error .help-block{
+        color:red;
+    }
+    
+    .has-error .form-control {
+        border-color:red;
+        box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 6px red
+    }
+    
