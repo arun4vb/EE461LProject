@@ -79,27 +79,27 @@ def create_project():
 
 @app.route('/api/checkout', methods=['POST'])
 #function to check out requested HW resources
-#@params: JSON object containing HW set name and amount to be issued
-#@return: JSON object contatining HW set if successful checkout
+#@params: JSON object containing unique project ID, HW set name and amount to be issued
+#@return: JSON object contatining project data after checkout
 def checkout_hw_set():
     request_data = request.json
-    hw_set = db.checkout_hw_set(request_data['name'], request_data['amount'])
+    proj = db.checkout_hw_set(request_data['project_id'], request_data['name'], request_data['amount'])
 
-    if hw_set is None:
+    if proj is None:
         return Response({}, 412)
     else:
-        return Response(hw_set, 201)
+        return Response(proj, 201)
 
 
 @app.route('/api/checkin', methods=['POST'])
 #function to check in HW resources
-#@params: JSON object containing HW set name and amount to be returned
-#@return: JSON object containing state of HW set after attempted checkin
+#@params: JSON object containing unique project ID, HW set name and amount to be returned
+#@return: JSON object containing project data after checkin
 def checkin_hw_set():
     request_data = request.json
-    hw_set = db.checkin_hw_set(request_data['name'], request_data['amount'])
+    proj = db.checkin_hw_set(request_data['project_id'], request_data['name'], request_data['amount'])
 
-    return Response(hw_set, 201)
+    return Response(proj, 201)
 
 
 if __name__ == '__main__':
