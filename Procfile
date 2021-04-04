@@ -1,0 +1,1 @@
+web: gunicorn --chdir final-project-api serve:app

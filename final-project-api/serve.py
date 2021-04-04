@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, Response, jsonify
+from flask import Flask, render_template, url_for, request, Response
 import db as db
 from json import loads, dumps
 
@@ -31,20 +31,11 @@ def login():
     user = db.login(login_data['username'], login_data['password'])
 
     if user is None:
-        return Response({}, 403) 
+        return Response({}, 403)
     else:
         return Response(user, 200)
 
-#---------- Response functions ----------#
 
-def ok(body):
-    return {'ok': True, 'text': body}
-
-def unauthorised():
-    return {'status': 401, 'text': {'message': 'Unauthorised'}}
-
-def error(message):
-    return {'status': 403, 'text': message}
 #----------Project/HW Set Endpoints----------#
 
 
