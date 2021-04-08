@@ -122,51 +122,51 @@ def get_hw_sets():
 
 
 #function to allow user to check out a HW set
-def checkout_hw_set(project_id, name, qty):
+def checkout_hw_set(user, project_name, hw_set_name, qty):
     #check if requested amount is available
     #if not, return None
-    hw_set = hw_sets.find_one({ 'name': name })
+    hw_set = hw_sets.find_one({ 'name': hw_set_name })
 
     if hw_set['availability'] - qty < 0:
         return None
     else:
         #update project and HW set w/ requested amount
         hw_sets.find_one_and_update(
-            { 'name': name },
+            { 'name': hw_set_name },
             { '$inc': { 'availability': -qty } })
 
-        proj = user_projects.find_one({ 'project_id': project_id })
+        proj = user_projects.find_one({ 'user': user, 'project_name': project_name })
         #insert new hw set into resources if it does not exist
         for hw_set in proj['resources']:
-            if hw_set['name'] == name:
+            if hw_set['name'] == hw_set_name:
                     return dumps(user_projects.find_one_and_update(
-                        { 'project_id': project_id, 'resources.name': name },
+                        { 'user': user, 'project_name': project_name, 'resources.name': hw_set_name },
                         { '$inc': { 'resources.$.qty': qty } },
                         return_document=ReturnDocument.AFTER))
 
         return dumps(user_projects.find_one_and_update(
-            { 'project_id': project_id },
-            { '$push': { 'resources': { 'name': name, 'qty': qty } } },
+            { 'user': user, 'project_name': project_name },
+            { '$push': { 'resources': { 'name': hw_set_name, 'qty': qty } } },
             return_document=ReturnDocument.AFTER))
 
 
 #function to allow user to check in a HW set
-def checkin_hw_set(project_id, name, qty):
+def checkin_hw_set(user, project_name, hw_set_name, qty):
     #update project and HW set w/ requested amount
     hw_sets.find_one_and_update(
-        { 'name': name },
+        { 'name': hw_set_name },
         { '$inc': { 'availability': qty } })
 
-    proj = user_projects.find_one({ 'project_id': project_id })
+    proj = user_projects.find_one({ 'user': user, 'project_name': project_name })
     #remove hw set from resources if user checked in all resources
     for hw_set in proj['resources']:
-        if hw_set['name'] == name and hw_set['qty'] - qty == 0:
+        if hw_set['name'] == hw_set_name and hw_set['qty'] - qty == 0:
             return dumps(user_projects.find_one_and_update(
-            { 'project_id': project_id },
-            { '$pull': { 'resources': { 'name': name } } },
+            { 'user': user, 'project_name': project_name },
+            { '$pull': { 'resources': { 'name': hw_set_name } } },
             return_document=ReturnDocument.AFTER))
 
     return dumps(user_projects.find_one_and_update(
-        { 'project_id': project_id, 'resources.name': name },
+        { 'user': user, 'project_name': project_name, 'resources.name': hw_set_name },
         { '$inc': { 'resources.$.qty': -qty } },
         return_document=ReturnDocument.AFTER))

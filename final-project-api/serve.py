@@ -31,20 +31,11 @@ def login():
     user = db.login(login_data['username'], login_data['password'])
 
     if user is None:
-        return Response({}, 403) 
+        return Response(dumps({}), 403) 
     else:
         return Response(user, 200)
 
-#---------- Response functions ----------#
 
-def ok(body):
-    return {'ok': True, 'text': body}
-
-def unauthorised():
-    return {'status': 401, 'text': {'message': 'Unauthorised'}}
-
-def error(message):
-    return {'status': 403, 'text': message}
 #----------Project/HW Set Endpoints----------#
 
 
@@ -83,10 +74,10 @@ def create_project():
 #@return: JSON object contatining project data after checkout
 def checkout_hw_set():
     request_data = request.json
-    proj = db.checkout_hw_set(request_data['project_id'], request_data['name'], request_data['amount'])
+    proj = db.checkout_hw_set(request_data['user'], request_data['project_name'], request_data['hw_set'], request_data['amount'])
 
     if proj is None:
-        return Response({}, 412)
+        return Response(dumps({}), 412)
     else:
         return Response(proj, 201)
 
@@ -97,9 +88,9 @@ def checkout_hw_set():
 #@return: JSON object containing project data after checkin
 def checkin_hw_set():
     request_data = request.json
-    proj = db.checkin_hw_set(request_data['project_id'], request_data['name'], request_data['amount'])
+    proj = db.checkin_hw_set(request_data['user'], request_data['project_name'], request_data['hw_set'], request_data['amount'])
 
-    return Response(proj, 201)
+    return Response(dumps(proj), 201)
 
 
 if __name__ == '__main__':
