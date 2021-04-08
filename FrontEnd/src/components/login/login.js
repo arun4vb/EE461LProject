@@ -71,6 +71,9 @@ function Login() {
       this.state = {
         username: "",
         password: "",
+        submitted: false,
+        isLoggedIn: false,
+        loginError: ""
       }
       this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
@@ -79,7 +82,9 @@ function Login() {
     //update form fields as user types
     handleChange(event) {
       this.setState({
-        [event.target.id]: event.target.value
+        [event.target.id]: event.target.value,
+        submitted: false,
+        loginError: null
       });
     }
 
@@ -87,25 +92,51 @@ function Login() {
     //TODO: redirect user after successful login? Change login button?
     handleSubmit(event) {
       event.preventDefault();
+
+      this.setState({ submitted: true });
       const loginRequest = {
         username: this.state.username,
         password: this.state.password
       };
       axios.post("/api/login", loginRequest).then(res => {
         window.sessionStorage.setItem("user", JSON.stringify(res.data)); //store user data for use throughout app
-        console.log(JSON.parse(window.sessionStorage.getItem("user"))); //DEBUG
+        console.log('currentUser object', JSON.parse(window.sessionStorage.getItem("user"))); //DEBUG
+        console.log('res ', res);
+        this.setState({
+          isLoggedIn: true,
+          loginError: null 
+        })
       }).catch((response) => {
-        console.log("invalid login credentials");
+        console.log("(CATCH) invalid login credentials");
+        console.log('error response ', response);
+        this.setState({
+          isLoggedIn: false,
+          loginError: "Username or password is incorrect"
+        })
       });
     }
 
     render () {
+      const {username, password, submitted, isLoggedIn, loginError} = this.state;
+      // login_err = this.loginError(submitted, isLoggedIn);
       return (
         <form name="login_form" onSubmit={this.handleSubmit}>
-          <label for="username">username</label>
-          <input type="text" id="username" value={this.state.username} onChange={this.handleChange} />
-          <label for="password">password</label>
-          <input type="text" id="password" value={this.state.password} onChange={this.handleChange} />
+          {loginError &&
+            <div id="login-errormsg">{loginError}</div>}
+          <div className={'form-group-area' + (submitted && !username ? ' has-error' : '')}>
+            <label for="username">username</label>
+            <input type="text" class="form-control" id="username" value={username} onChange={this.handleChange} />
+            {submitted && !username &&
+                <div className="help-block">Username is required</div>
+            }
+          </div>
+          <div className={'form-group-area' + (submitted && !password ? ' has-error' : '')}>
+            <label for="password">password</label>
+            <input type="password" class="form-control" id="password" value={password} onChange={this.handleChange} />
+            {submitted && !password &&
+              <div className="help-block">Password is required</div>
+            }
+          </div>
           <input type="submit" value="submit" class="submit" />
         </form>
       );
@@ -142,8 +173,8 @@ function Login() {
         password: this.state.password
       };
       axios.post("/api/register", registration).then(res => {
-        console.log(res);
-        console.log(res.data);
+        console.log('register request response', res);
+        console.log('register request response data', res.data);
       }).catch((response) => {
         console.log("username already taken")
       });
