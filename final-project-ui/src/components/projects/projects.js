@@ -74,18 +74,20 @@ class Projects extends Component {
       user: this.state.user.username,
       project_name: this.state.proj_name,
       hw_set: this.state.hw_set,
-      amount: checkout_num
+      amount: this.state.checkout_num
     };
+    //create project, then checkout if project insertion successful,
+    //then reload projects w/ new proj data
     axios.post("/api/createproject", create_new_proj).then(res => {
       console.log('Hi');
-    });
-    axios.post("/api/checkout", check_out_info).then(res => {
-      console.log('Check Out!')
-    });
-    axios.post("/api/loadprojects", this.state.user).then(res => {
-      const projects = res.data['projects'];
-      this.setState({ projects: projects });
-      console.log("Projects: " + projects)
+      axios.post("/api/checkout", check_out_info).then(res => {
+        console.log('Check Out!')
+      });
+      axios.post("/api/loadprojects", this.state.user).then(res => {
+        const projects = res.data['projects'];
+        this.setState({ projects: projects });
+        console.log("Projects: " + projects)
+      });
     });
   }
 

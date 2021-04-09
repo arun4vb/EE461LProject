@@ -125,6 +125,7 @@ def get_hw_sets():
 def checkout_hw_set(user, project_name, hw_set_name, qty):
     #check if requested amount is available
     #if not, return None
+    qty = int(qty)
     hw_set = hw_sets.find_one({ 'name': hw_set_name })
 
     if hw_set['availability'] - qty < 0:
@@ -153,6 +154,7 @@ def checkout_hw_set(user, project_name, hw_set_name, qty):
 #function to allow user to check in a HW set
 def checkin_hw_set(user, project_name, hw_set_name, qty):
     #update project and HW set w/ requested amount
+    qty = int(qty)
     hw_sets.find_one_and_update(
         { 'name': hw_set_name },
         { '$inc': { 'availability': qty } })

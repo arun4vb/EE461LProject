@@ -1,8 +1,10 @@
 from flask import Flask, render_template, url_for, request, Response, jsonify
 import db as db
 from json import loads, dumps
+from flask_cors import CORS
 
 app = Flask(__name__)
+cors = CORS(app)
 
 
 #----------Register/Login Endpoints----------#

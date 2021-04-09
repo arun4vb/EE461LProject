@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Grid, Cell } from 'react-mdl';
 import './landingpage.css'
+import HWSet from '../hw-set/hw-set.js'
 
 class Landing extends Component {
     render() {
@@ -35,6 +36,11 @@ class Landing extends Component {
 
                             </div>
                         </div>
+                    </Cell>
+                    <br aria-setsize="50px" />
+                    <h1>HW Sets</h1>
+                    <Cell col={12} align="center">
+                        <HWSet />
                     </Cell>
                 </Grid>
             </div>
