@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import './projects.css';
 import axios from 'axios';
 
@@ -8,7 +8,6 @@ import axios from 'axios';
 class Projects extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       user: {
         username: "",
@@ -16,8 +15,15 @@ class Projects extends Component {
         password: "",
       },
       projects: [],  //array of JSON objects representing a project
-      isLoggedIn: false
+      isLoggedIn: false,
+      hw_sets: [],
+      proj_name: "",
+      hw_set: "",
+      checkout_num: "",
+      description: "",
     };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   //load user projects when component loads
@@ -31,15 +37,65 @@ class Projects extends Component {
         axios.post("/api/loadprojects", this.state.user).then(res => {
           const projects = res.data['projects'];
           this.setState({ projects: projects });
+          console.log("Projects: " + projects)
         });
       }
       );
     }
+    axios.get("/api/loadhwsets").then(res => {
+      const hw_sets = res.data['hw_sets'];
+      this.setState({ hw_sets: hw_sets });
+      console.log("These are the hw_sets " + hw_sets)
+    });
+  }
+
+  othername(event) {
+    console.log("check out num: " + this.state.create_project.checkout_num)
+  }
+
+  handleChange(event) {
+    console.log("HANDLE CHANGE CALLED")
+    console.log("Project Name: " + this.state.proj_name)
+    this.setState({
+      [event.target.id]: event.target.value
+    });
+  }
+
+  handleSubmit(event) {
+    console.log("Handle Submit");
+    event.preventDefault();
+    const create_new_proj = {
+      user: this.state.user.username,
+      project_name: this.state.proj_name,
+      project_id: "1111",
+      description: this.state.description,
+    };
+    const check_out_info = {
+      user: this.state.user.username,
+      project_name: this.state.proj_name,
+      hw_set: this.state.hw_set,
+      amount: checkout_num
+    };
+    axios.post("/api/createproject", create_new_proj).then(res => {
+      console.log('Hi');
+    });
+    axios.post("/api/checkout", check_out_info).then(res => {
+      console.log('Check Out!')
+    });
+    axios.post("/api/loadprojects", this.state.user).then(res => {
+      const projects = res.data['projects'];
+      this.setState({ projects: projects });
+      console.log("Projects: " + projects)
+    });
   }
 
   render() {
     //make sure user is logged in before attempting to render username
     const isLoggedIn = this.state.isLoggedIn;
+    const proj_name = this.state.proj_name;
+    const hw_set = this.state.hw_set;
+    const checkout_num = this.state.checkout_num;
+    const description = this.state.description;
     let text;
     let button;
     let modal;
@@ -51,25 +107,55 @@ class Projects extends Component {
         Create New Project
     </button>
 
-      modal = <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      modal = <form name="create_proj_modal" onSubmit={this.handleSubmit}><div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="false">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalCenterTitle">project</h5>
+              <h5 class="modal-title" id="exampleModalCenterTitle">Create Project</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-              ...
-</div>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-default">Project Name</span>
+                </div>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="proj_name" value={proj_name} onChange={this.handleChange}></input>
+              </div>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hardware Sets</button>
+                  <div class="dropdown-menu">
+                    {this.state.hw_sets.map(hw => {
+                      return <div>
+                        <a class="dropdown-item" href="#">{hw["name"]}</a>
+                      </div>
+                    })}
+                  </div>
+                </div>
+                <input type="text" class="form-control" aria-label="Text input with dropdown button" id="hw_set" value={hw_set} onChange={this.handleChange}></input>
+              </div>
+              <div class="input-group input-group-sm mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-sm">Checkout #</span>
+                </div>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" id="checkout_num" value={checkout_num} onChange={this.handleChange}></input>
+              </div>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Description</span>
+                </div>
+                <textarea class="form-control" aria-label="With textarea" id="description" value={description} onChange={this.handleChange}></textarea>
+              </div>
+            </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
+              <button type="button" class="btn btn-primary" onClick={this.handleSubmit}>Create Project</button>
             </div>
           </div>
         </div>
-      </div>;
+      </div></form>;
 
       dashboard = <div class="row">
         {this.state.projects.map(project => {
@@ -93,7 +179,7 @@ class Projects extends Component {
 
     return (
       <>
-        
+
         {text}
         {button}
         {modal}
