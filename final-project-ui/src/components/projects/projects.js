@@ -21,9 +21,13 @@ class Projects extends Component {
       hw_set: "",
       checkout_num: "",
       description: "",
+      checkin_num: "",
+      resources: []
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleCheckIn = this.handleCheckIn.bind(this);
+    this.handleCheckOut = this.handleCheckOut.bind(this);
   }
 
   //load user projects when component loads
@@ -57,7 +61,7 @@ class Projects extends Component {
       const re = /^[0-9\b]+$/;
       // if value is not blank, then test the regex
       if (event.target.value === '' || re.test(event.target.value)) {
-         this.setState({[event.target.id]: event.target.value})
+        this.setState({ [event.target.id]: event.target.value })
       }
     }
     else {
@@ -97,6 +101,48 @@ class Projects extends Component {
     });
   }
 
+  handleCheckIn(event) {
+    event.preventDefault();
+    const check_in_info = {
+      user: this.state.user.username,
+      project_name: this.state.proj_name,
+      hw_set: this.state.hw_set,
+      amount: this.state.checkin_num
+    };
+    console.log(JSON.stringify(check_in_info))
+    axios.post("/api/checkin", check_in_info).then(res => {
+      console.log('Check In!')
+    });
+  }
+
+  handleCheckOut(event) {
+    event.preventDefault();
+    const check_out_info = {
+      user: this.state.user.username,
+      project_name: this.state.proj_name,
+      hw_set: this.state.hw_set,
+      amount: this.state.checkout_num
+    };
+    console.log(JSON.stringify(check_out_info))
+    axios.post("/api/checkout", check_out_info).then(res => {
+      console.log('Check Out!')
+    });
+  }
+
+  helloCheck(project) {
+    this.setState({
+      proj_name: project["project_name"]
+    })
+  }
+
+  helloDetails(project) {
+    this.setState({
+      proj_name: project["project_name"],
+      resources: project["resources"]
+    })
+    console.log(this.state.proj_name)
+  }
+
   render() {
     //make sure user is logged in before attempting to render username
     const isLoggedIn = this.state.isLoggedIn;
@@ -104,16 +150,20 @@ class Projects extends Component {
     const hw_set = this.state.hw_set;
     const checkout_num = this.state.checkout_num;
     const description = this.state.description;
+    const checkin_num = this.state.checkin_num;
+    const resources = this.state.resources;
     let text;
     let button;
     let modal;
     let dashboard;
-    let items = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
+    let checkin_modal;
+    let checkout_modal;
+    let details_modal;
     if (isLoggedIn) {
       text = <h1>Hello, {this.state.user.username}!</h1>;
-      button = <button type="button" class="btn btn-primary create-new-project" data-toggle="modal" data-target="#exampleModalCenter">
+      button = <div class="create-proj-div"><button type="button" class="btn btn-primary create-new-project" data-toggle="modal" data-target="#exampleModalCenter">
         Create New Project
-    </button>
+    </button></div>
 
       modal = <form name="create_proj_modal" onSubmit={this.handleSubmit}><div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="false">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -173,13 +223,128 @@ class Projects extends Component {
                 <h5 class="card-title">{project["project_name"]}</h5>
                 <h7 class="card-title">Project ID: {project["project_id"]}</h7>
                 <p class="card-text">Description: {project["description"]}</p>
-                <a href="#" class="btn btn-primary check">Check In/Out</a>
-                <a href="#" class="btn btn-primary details">Details</a>
+                <div onClick={() => this.helloCheck(project)}>
+                  <a href="#" class="btn btn-primary check" data-toggle="modal" data-target="#exampleModalCenter1">Check In</a>
+                  <a href="#" class="btn btn-primary check" data-toggle="modal" data-target="#exampleModalCenter2">Check Out</a>
+                </div>
+                <div onClick={() => this.helloDetails(project)}>
+                  <a href="#" class="btn btn-primary details" data-toggle="modal" data-target="#exampleModalCenter3">Details</a>
+                </div>
               </div>
             </div>
           </div>
         })}
       </div>;
+
+      checkin_modal = <div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalCenterTitle">Check In</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hardware Sets</button>
+                  <div class="dropdown-menu">
+                    {this.state.hw_sets.map(hw => {
+                      return <div>
+                        <a class="dropdown-item" href="#">{hw["name"]}</a>
+                      </div>
+                    })}
+                  </div>
+                </div>
+                <input type="text" class="form-control" aria-label="Text input with dropdown button" id="hw_set" value={hw_set} onChange={this.handleChange}></input>
+              </div>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-default">Check In Amount</span>
+                </div>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="checkin_num" value={checkin_num} onChange={this.handleChange}></input>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" onClick={this.handleCheckIn}>Check In</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      checkout_modal = <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalCenterTitle">Check Out</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hardware Sets</button>
+                  <div class="dropdown-menu">
+                    {this.state.hw_sets.map(hw => {
+                      return <div>
+                        <a class="dropdown-item" href="#">{hw["name"]}</a>
+                      </div>
+                    })}
+                  </div>
+                </div>
+                <input type="text" class="form-control" aria-label="Text input with dropdown button" id="hw_set" value={hw_set} onChange={this.handleChange}></input>
+              </div>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-default">Check Out Amount</span>
+                </div>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="checkout_num" value={checkout_num} onChange={this.handleChange}></input>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" onClick={this.handleCheckOut}>Check Out</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      details_modal = <div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalCenterTitle">Project Details</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-default">Project Name</span>
+                </div>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="proj_name" value={proj_name}></input>
+              </div>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-default">Hardware Sets</span>
+                </div>
+                <p>{resources.map(resources => {
+                  return <div>
+                    {resources["name"] + " " + resources["qty"] + " checked out"}
+                  </div>
+                })}</p>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
     } else {
       text = <h1>Log in to view your projects</h1>
@@ -192,6 +357,9 @@ class Projects extends Component {
         {button}
         {modal}
         {dashboard}
+        {checkin_modal}
+        {checkout_modal}
+        {details_modal}
         {/* <ul className="list-group">
           {this.state.projects.map(project => (
             <li className="list-group-item list-group-item-primary">
