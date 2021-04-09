@@ -27,7 +27,7 @@ export class App extends Component {
     const handleLoggInState = () => {
       var name = link.state.log;
       link.setState({ log: !name })
-      sessionStorage.clear();
+      
 
 
     }

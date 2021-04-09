@@ -5,7 +5,6 @@ import axios from 'axios'
 import { isLoggedInUpdateContext } from './../../App'
 import { Link } from 'react-router-dom';
 
-
 function Login() {
   const [registrationFormStatus, setRegistartionFormStatus] = useState(false);
   const loginProps = useSpring({
@@ -133,7 +132,7 @@ class LoginForm extends React.Component {
     return (
 
       <form name="login_form" onSubmit={this.handleSubmit}>
-<Link to="/">
+
         {isLoggedIn && flag &&
           <div>
             <isLoggedInUpdateContext.Consumer>
@@ -142,13 +141,11 @@ class LoginForm extends React.Component {
                 this.setState({
                   flag: false
                 })
-                
               }}
             </isLoggedInUpdateContext.Consumer>
 
           </div>
         }
-        </Link>
 
 
         {loginError &&
@@ -167,7 +164,7 @@ class LoginForm extends React.Component {
             <div className="help-block">Password is required</div>
           }
         </div>
-        <input type="submit" value="submit" class="submit" />
+       <input type="submit" value="submit" class="submit" />
       </form>
     );
   }

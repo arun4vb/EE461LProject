@@ -73,7 +73,7 @@ class Nav extends Component {
 
             // link.setState({isLoggedIn: false})
             props();
-            
+            sessionStorage.clear();
             //console.log('The link was clicked.');
         }
         const isLoggedIn = this.state.isLoggedIn;
