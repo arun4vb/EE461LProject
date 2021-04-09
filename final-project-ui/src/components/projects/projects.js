@@ -49,16 +49,22 @@ class Projects extends Component {
     });
   }
 
-  othername(event) {
-    console.log("check out num: " + this.state.create_project.checkout_num)
-  }
-
   handleChange(event) {
-    console.log("HANDLE CHANGE CALLED")
-    console.log("Project Name: " + this.state.proj_name)
-    this.setState({
-      [event.target.id]: event.target.value
-    });
+    console.log("HANDLE CHANGE CALLED");
+    console.log("Project Name: " + this.state.proj_name);
+    //only allow numeric entries into checkout amount
+    if (event.target.id === "checkout_num") {
+      const re = /^[0-9\b]+$/;
+      // if value is not blank, then test the regex
+      if (event.target.value === '' || re.test(event.target.value)) {
+         this.setState({[event.target.id]: event.target.value})
+      }
+    }
+    else {
+      this.setState({
+        [event.target.id]: event.target.value
+      });
+    }
   }
 
   handleSubmit(event) {

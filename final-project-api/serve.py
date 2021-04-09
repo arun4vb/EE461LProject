@@ -92,6 +92,8 @@ def checkin_hw_set():
     request_data = request.json
     proj = db.checkin_hw_set(request_data['user'], request_data['project_name'], request_data['hw_set'], request_data['amount'])
 
+    if proj is None:
+        return Response(dumps({}), 412)
     return Response(dumps(proj), 201)
 
 
