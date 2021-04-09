@@ -92,11 +92,11 @@ class Projects extends Component {
       console.log('Hi');
       axios.post("/api/checkout", check_out_info).then(res => {
         console.log('Check Out!')
-      });
       axios.post("/api/loadprojects", this.state.user).then(res => {
         const projects = res.data['projects'];
         this.setState({ projects: projects });
         console.log("Projects: " + projects)
+        });
       });
     });
   }
@@ -112,6 +112,11 @@ class Projects extends Component {
     console.log(JSON.stringify(check_in_info))
     axios.post("/api/checkin", check_in_info).then(res => {
       console.log('Check In!')
+      axios.post("/api/loadprojects", this.state.user).then(res => {
+        const projects = res.data['projects'];
+        this.setState({ projects: projects });
+        console.log("Projects: " + projects)
+      });
     });
   }
 
@@ -126,6 +131,11 @@ class Projects extends Component {
     console.log(JSON.stringify(check_out_info))
     axios.post("/api/checkout", check_out_info).then(res => {
       console.log('Check Out!')
+      axios.post("/api/loadprojects", this.state.user).then(res => {
+        const projects = res.data['projects'];
+        this.setState({ projects: projects });
+        console.log("Projects: " + projects)
+      });
     });
   }
 
@@ -141,6 +151,7 @@ class Projects extends Component {
       resources: project["resources"]
     })
     console.log(this.state.proj_name)
+    console.log("Resources: " + JSON.stringify(this.state.resources))
   }
 
   render() {
