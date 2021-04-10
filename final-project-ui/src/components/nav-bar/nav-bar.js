@@ -10,7 +10,6 @@ class Nav extends Component {
     constructor(props) {
         super(props);
 
-
         this.state = {
             user: {
                 username: "",
@@ -122,7 +121,7 @@ class Nav extends Component {
                                                             //  <h1>{props1 + "helo"}</h1> 
                                                             <div class="dropdown">
                                                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                    Welcome {this.state.user.username}
+                                                                    Welcome
                                                                 </button>
                                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                                     <Link to="/login"> <a class="dropdown-item" href="#" onClick={() => handleClick(props2)}>Logout</a></Link>

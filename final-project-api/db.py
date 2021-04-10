@@ -179,11 +179,18 @@ def checkin_hw_set(user, project_name, hw_set_name, qty):
     if hw_sets.find_one({ 'name': hw_set_name }) is None:
         return None
 
+    #make sure user is returning resources that they have
+    proj = user_projects.find_one({ 'user': user, 'project_name': project_name })
+    flag = False
+    for hw_set in proj['resources']:
+        if hw_set['name'] == hw_set_name: flag = True
+    if flag is False:
+        return None
+
     hw_sets.find_one_and_update(
         { 'name': hw_set_name },
         { '$inc': { 'availability': qty } })
 
-    proj = user_projects.find_one({ 'user': user, 'project_name': project_name })
     #remove hw set from resources if user checked in all resources
     for hw_set in proj['resources']:
         if hw_set['name'] == hw_set_name and hw_set['qty'] - qty <= 0:

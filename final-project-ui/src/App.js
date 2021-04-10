@@ -14,9 +14,12 @@ export const isLogged = React.createContext();
 export class App extends Component {
   constructor(props) {
     super(props);
-
+    let state = false;
+    if (window.sessionStorage.getItem("user")) {
+      state = true;
+    }
     this.state = {
-      log: false
+      log: state
     };
   }
 
