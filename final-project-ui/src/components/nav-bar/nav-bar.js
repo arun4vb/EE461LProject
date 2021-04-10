@@ -99,10 +99,9 @@ class Nav extends Component {
 
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="nav justify-content-end">
-                            <li class="nav-item"><Link to="/hw-set"><a class="nav-link" href="#">Hardware Set</a></Link></li>
+                            <li class="nav-item"><Link to="/hw-set"><a class="nav-link" href="#">Hardware Sets</a></Link></li>
+                            <li class="nav-item"><Link to="/datasets"><a class="nav-link" href="#">Datasets</a></Link></li>
                             <li class="nav-item"><Link to="/projects"><a class="nav-link" href="#">Projects</a></Link></li>
-                            <li class="nav-item"><a class="nav-link" href="#">About</a></li>
-                            <li class="nav-item news-link"><a class="nav-link" href="#">News</a></li>
                             {/* <div class="dropdown">
                                     <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         Welcome {this.state.user.username}</a> */}

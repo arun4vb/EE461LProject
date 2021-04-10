@@ -30,8 +30,6 @@ class HWSet extends Component {
             <h7 class="card-title">HWSet: {hw_set['name']}</h7>
             <p class="card-text">Capacity: {hw_set["capacity"]}</p>
             <p class="card-text">Availability: {hw_set["availability"]}</p>
-            <a href="#" class="btn btn-primary check">Check In/Out</a>
-            <a href="#" class="btn btn-primary details">Details</a>
           </div>
         </div>
       </div>
@@ -41,7 +39,6 @@ class HWSet extends Component {
     <div>
   {dashboard}
     </div>
-    
     );
   }
 }

@@ -28,6 +28,7 @@ class Projects extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCheckIn = this.handleCheckIn.bind(this);
     this.handleCheckOut = this.handleCheckOut.bind(this);
+    this.deleteProject = this.deleteProject.bind(this);
   }
 
   //load user projects when component loads
@@ -50,6 +51,21 @@ class Projects extends Component {
       const hw_sets = res.data['hw_sets'];
       this.setState({ hw_sets: hw_sets });
       console.log("These are the hw_sets " + hw_sets)
+    });
+  }
+
+  deleteProject(project) {
+    const request = {
+      'user': this.state.user.username,
+      'project_name': project['project_name']
+    }
+    //tell server to delete project records
+    axios.post('/api/deleteproject', request).then((res) => {
+      axios.post("/api/loadprojects", this.state.user).then(res => {
+        const projects = res.data['projects'];
+        this.setState({ projects: projects });
+        console.log("Projects: " + projects)
+      });
     });
   }
 
@@ -240,6 +256,10 @@ class Projects extends Component {
                 </div>
                 <div onClick={() => this.helloDetails(project)}>
                   <a href="#" class="btn btn-primary details" data-toggle="modal" data-target="#exampleModalCenter3">Details</a>
+                </div>
+                <br />
+                <div onClick={() => this.deleteProject(project)}>
+                  <a href="#" class="btn btn-primary check" data-toggle={this.deleteProject}>Delete Project</a>
                 </div>
               </div>
             </div>

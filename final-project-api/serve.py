@@ -69,6 +69,13 @@ def create_project():
 
     return Response("Project created", 201)
 
+@app.route('/api/deleteproject', methods=['POST'])
+def delete_project():
+    proj = request.json
+    db.delete_project(proj['user'], proj['project_name'])
+
+    return Response('Project deleted', 200)
+
 
 @app.route('/api/checkout', methods=['POST'])
 #function to check out requested HW resources

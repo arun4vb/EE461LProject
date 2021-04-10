@@ -88,6 +88,24 @@ def create_project(user, project_name, project_id, description):
         { 'username': user }, 
         { '$push': { 'project_ids': proj.inserted_id } })
 
+def delete_project(user, project_name):
+    #delete reference to project in user account
+    proj = user_projects.find_one({ 'user': user, 'project_name': project_name })
+    oid = proj['_id']
+
+    #return all checked out resources to HW sets
+    for hw_set in proj['resources']:
+        hw_sets.find_one_and_update(
+            { 'name': hw_set['name'] },
+            { '$inc': { 'availability': hw_set['qty'] } }
+        )
+
+    user_accts.find_one_and_update(
+        { 'username': user },
+        { '$pull': { 'project_ids': oid } })
+
+    #remove project from collection
+    user_projects.find_one_and_delete({ 'user': user, 'project_name': project_name })
 
 #function to return all projects that belong to a user
 #@return: list of all projects pertaining to user in JSON format
@@ -160,7 +178,7 @@ def checkin_hw_set(user, project_name, hw_set_name, qty):
 
     if hw_sets.find_one({ 'name': hw_set_name }) is None:
         return None
-        
+
     hw_sets.find_one_and_update(
         { 'name': hw_set_name },
         { '$inc': { 'availability': qty } })
@@ -168,7 +186,7 @@ def checkin_hw_set(user, project_name, hw_set_name, qty):
     proj = user_projects.find_one({ 'user': user, 'project_name': project_name })
     #remove hw set from resources if user checked in all resources
     for hw_set in proj['resources']:
-        if hw_set['name'] == hw_set_name and hw_set['qty'] - qty == 0:
+        if hw_set['name'] == hw_set_name and hw_set['qty'] - qty <= 0:
             return dumps(user_projects.find_one_and_update(
             { 'user': user, 'project_name': project_name },
             { '$pull': { 'resources': { 'name': hw_set_name } } },

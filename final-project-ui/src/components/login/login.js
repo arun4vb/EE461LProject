@@ -3,7 +3,7 @@ import './login.css'
 import { useSpring, animated } from "react-spring";
 import axios from 'axios'
 import { isLoggedInUpdateContext } from './../../App'
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 function Login() {
   const [registrationFormStatus, setRegistartionFormStatus] = useState(false);
@@ -128,44 +128,43 @@ class LoginForm extends React.Component {
       console.log("hello")
       props();
     }
-
+    
     return (
+      <div>
+        <form name="login_form" onSubmit={this.handleSubmit}>
+          {isLoggedIn && flag &&
+            <div>
+              <isLoggedInUpdateContext.Consumer>
+                {(props) => {
+                  props();
+                  this.setState({
+                    flag: false
+                  })
+                }}
+              </isLoggedInUpdateContext.Consumer>
 
-      <form name="login_form" onSubmit={this.handleSubmit}>
-
-        {isLoggedIn && flag &&
-          <div>
-            <isLoggedInUpdateContext.Consumer>
-              {(props) => {
-                props();
-                this.setState({
-                  flag: false
-                })
-              }}
-            </isLoggedInUpdateContext.Consumer>
-
+            </div>
+          }
+          {loginError &&
+            <div id="login-errormsg">{loginError}</div>}
+          <div className={'form-group-area' + (submitted && !username ? ' has-error' : '')}>
+            <label for="username">username</label>
+            <input type="text" class="form-control" id="username" value={username} onChange={this.handleChange} />
+            {submitted && !username &&
+              <div className="help-block">Username is required</div>
+            }
           </div>
-        }
-
-
-        {loginError &&
-          <div id="login-errormsg">{loginError}</div>}
-        <div className={'form-group-area' + (submitted && !username ? ' has-error' : '')}>
-          <label for="username">username</label>
-          <input type="text" class="form-control" id="username" value={username} onChange={this.handleChange} />
-          {submitted && !username &&
-            <div className="help-block">Username is required</div>
-          }
-        </div>
-        <div className={'form-group-area' + (submitted && !password ? ' has-error' : '')}>
-          <label for="password">password</label>
-          <input type="password" class="form-control" id="password" value={password} onChange={this.handleChange} />
-          {submitted && !password &&
-            <div className="help-block">Password is required</div>
-          }
-        </div>
-       <input type="submit" value="submit" class="submit" />
-      </form>
+          <div className={'form-group-area' + (submitted && !password ? ' has-error' : '')}>
+            <label for="password">password</label>
+            <input type="password" class="form-control" id="password" value={password} onChange={this.handleChange} />
+            {submitted && !password &&
+              <div className="help-block">Password is required</div>
+            }
+          </div>
+          <input type="submit" value="submit" class="submit" />
+        </form>
+        { this.state.isLoggedIn ? (<Redirect push to="/"/>) : null }
+      </div>
     );
   }
 }
@@ -179,6 +178,7 @@ class RegisterForm extends React.Component {
       username: "",
       email: "",
       password: "",
+      registerError: null
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -187,7 +187,8 @@ class RegisterForm extends React.Component {
   //update form fields as user types
   handleChange(event) {
     this.setState({
-      [event.target.id]: event.target.value
+      [event.target.id]: event.target.value,
+      registerError: ""
     });
   }
 
@@ -202,14 +203,21 @@ class RegisterForm extends React.Component {
     axios.post("/api/register", registration).then(res => {
       console.log('register request response', res);
       console.log('register request response data', res.data);
+      this.setState({
+        registerError: "account successfully created!"
+      })
     }).catch((response) => {
-      console.log("username already taken")
+      this.setState({
+        registerError: "username already taken!"
+      });
     });
   }
 
   render() {
     return (
       <form name="registration_form" onSubmit={this.handleSubmit}>
+          {this.state.registerError &&
+            <div id="login-errormsg">{this.state.registerError}</div>}
         <label for="email">email</label>
         <input type="text" id="email" value={this.state.email} onChange={this.handleChange} />
         <label for="username">username</label>
