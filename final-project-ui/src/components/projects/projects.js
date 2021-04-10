@@ -106,14 +106,23 @@ class Projects extends Component {
     //then reload projects w/ new proj data
     axios.post("/api/createproject", create_new_proj).then(res => {
       console.log('Hi');
-      axios.post("/api/checkout", check_out_info).then(res => {
-        console.log('Check Out!')
+      if (check_out_info['amount'] != '') {
+        axios.post("/api/checkout", check_out_info).then(res => {
+          console.log('Check Out!')
+          axios.post("/api/loadprojects", this.state.user).then(res => {
+            const projects = res.data['projects'];
+            this.setState({ projects: projects });
+            console.log("Projects: " + projects)
+          });
+        });
+      }
+      else {
         axios.post("/api/loadprojects", this.state.user).then(res => {
           const projects = res.data['projects'];
           this.setState({ projects: projects });
           console.log("Projects: " + projects)
         });
-      });
+      }
     });
   }
 

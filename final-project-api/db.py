@@ -187,18 +187,21 @@ def checkin_hw_set(user, project_name, hw_set_name, qty):
     if flag is False:
         return None
 
-    hw_sets.find_one_and_update(
-        { 'name': hw_set_name },
-        { '$inc': { 'availability': qty } })
-
     #remove hw set from resources if user checked in all resources
     for hw_set in proj['resources']:
         if hw_set['name'] == hw_set_name and hw_set['qty'] - qty <= 0:
+            sub = hw_set['qty']
+            hw_sets.find_one_and_update(
+                    { 'name': hw_set_name },
+                    { '$inc': { 'availability': sub } })
             return dumps(user_projects.find_one_and_update(
             { 'user': user, 'project_name': project_name },
             { '$pull': { 'resources': { 'name': hw_set_name } } },
             return_document=ReturnDocument.AFTER))
 
+    hw_sets.find_one_and_update(
+        { 'name': hw_set_name },
+        { '$inc': { 'availability': qty } })
     return dumps(user_projects.find_one_and_update(
         { 'user': user, 'project_name': project_name, 'resources.name': hw_set_name },
         { '$inc': { 'resources.$.qty': -qty } },
