@@ -16,9 +16,9 @@ cors = CORS(app)
 #@return: HTTP status of attempted account creation, maybe user object? (probably not)
 def register():
     user = request.json
-    user = db.create_acct(user['email'], user['username'], user['password'])
+    success = db.create_acct(user['email'], user['username'], user['password'])
 
-    if user is None:
+    if success is False:
         return Response({}, 422)
     else:
         return Response(user, 201)

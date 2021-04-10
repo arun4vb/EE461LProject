@@ -37,21 +37,21 @@ def login(username, password):
 def create_acct(email, username, password):
     #make sure username is not already taken
     if user_accts.find_one({ 'username': username }) is not None or user_accts.find_one({ 'email': email.lower() }) is not None:
-        return None
+        return False
     
     #generate salt & encrypt user password before storing in db
     salt = uuid.uuid4().hex
     encrypted_password = encrypt_password(password, salt)
 
     #store user details in db
-    return user_accts.insert_one({
+    user_accts.insert_one({
         'username': username,
         'email': email.lower(),
         'password': encrypted_password,
         'salt': salt,
         'project_ids': []
     })
-
+    return True
 
 #function to hash salted user password
 #@params: password and salt
