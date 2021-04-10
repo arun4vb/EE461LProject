@@ -114,6 +114,11 @@ class Projects extends Component {
             this.setState({ projects: projects });
             console.log("Projects: " + projects)
           });
+        }).catch(error => {
+          axios.post("/api/loadprojects", this.state.user).then(res => {
+            const projects = res.data['projects'];
+            this.setState({ projects: projects });
+          });
         });
       }
       else {

@@ -65,6 +65,8 @@ def load_hw_sets():
 #@return: Success message
 def create_project():
     proj = request.json
+    if proj['project_name'] == '':
+        return Response("Need Project Name", 412)
     db.create_project(proj['user'], proj['project_name'], proj['project_id'], proj['description'])
 
     return Response("Project created", 201)
