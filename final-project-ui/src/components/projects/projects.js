@@ -92,10 +92,10 @@ class Projects extends Component {
       console.log('Hi');
       axios.post("/api/checkout", check_out_info).then(res => {
         console.log('Check Out!')
-      axios.post("/api/loadprojects", this.state.user).then(res => {
-        const projects = res.data['projects'];
-        this.setState({ projects: projects });
-        console.log("Projects: " + projects)
+        axios.post("/api/loadprojects", this.state.user).then(res => {
+          const projects = res.data['projects'];
+          this.setState({ projects: projects });
+          console.log("Projects: " + projects)
         });
       });
     });
@@ -141,8 +141,8 @@ class Projects extends Component {
 
   helloCheck(project) {
     this.setState({
-      proj_name: project["project_name"]
-    })
+      proj_name: project["project_name"],
+    });
   }
 
   helloDetails(project) {
@@ -220,7 +220,7 @@ class Projects extends Component {
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" onClick={this.handleSubmit}>Create Project</button>
+              <button type="button" class="btn btn-primary" onClick={this.handleSubmit} data-dismiss="modal">Create Project</button>
             </div>
           </div>
         </div>
@@ -279,7 +279,7 @@ class Projects extends Component {
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" onClick={this.handleCheckIn}>Check In</button>
+              <button type="button" class="btn btn-primary" onClick={this.handleCheckIn} data-dismiss="modal">Check In</button>
             </div>
           </div>
         </div>
@@ -317,7 +317,7 @@ class Projects extends Component {
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" onClick={this.handleCheckOut}>Check Out</button>
+              <button type="button" class="btn btn-primary" onClick={this.handleCheckOut} data-dismiss="modal">Check Out</button>
             </div>
           </div>
         </div>
