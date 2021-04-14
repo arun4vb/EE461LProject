@@ -72,11 +72,25 @@ def create_project():
     return Response("Project created", 201)
 
 @app.route('/api/deleteproject', methods=['POST'])
+#function to delete a user project
+#@params: JSON object containing username, project name
 def delete_project():
     proj = request.json
     db.delete_project(proj['user'], proj['project_name'])
 
     return Response('Project deleted', 200)
+
+@app.route('/api/addproject', methods=['POST'])
+#function to add an existing project to user account
+#@params: username, project id belonging to project
+def add_existing_project():
+    request_data = request.json
+    proj = db.add_existing_project(request_data['user'], request_data['project_id'])
+
+    if proj is None:
+        return Response({}, 404)
+    else:
+        return Response({}, 201)
 
 
 @app.route('/api/checkout', methods=['POST'])

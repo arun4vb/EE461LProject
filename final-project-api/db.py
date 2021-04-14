@@ -1,5 +1,6 @@
 from pymongo import MongoClient, ReturnDocument
 from bson.json_util import loads, dumps
+from bson import ObjectId
 import hashlib, uuid
 
 #DB Connection
@@ -115,10 +116,23 @@ def get_user_projects(username):
 
     for proj_id in user['project_ids']:
         proj = user_projects.find_one({ '_id': proj_id })
-        del proj['_id']
+        #convert project id to usable string
+        o = proj['_id']
+        proj['_id'] = str(o)
         projects.append(proj)
     
     return dumps({ 'projects': projects })
+
+#function to add existing project to user account
+def add_existing_project(username, project_id):
+    #make sure project exists before adding to user account
+    if user_projects.find_one({ '_id': ObjectId(project_id) }) is None:
+        return None
+
+    user_accts.find_one_and_update({ 'username': username },
+        { '$push': { 'project_ids': ObjectId(project_id) } }
+    )
+
 
 
 #----------HW Set DB Functionality----------#
