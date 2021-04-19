@@ -67,7 +67,7 @@ def create_project():
     proj = request.json
     if proj['project_name'] == '':
         return Response("Need Project Name", 412)
-    db.create_project(proj['user'], proj['project_name'], proj['project_id'], proj['description'])
+    db.create_project(proj['user'], proj['project_name'], proj['description'])
 
     return Response("Project created", 201)
 
@@ -76,7 +76,7 @@ def create_project():
 #@params: JSON object containing username, project name
 def delete_project():
     proj = request.json
-    db.delete_project(proj['user'], proj['project_name'])
+    db.delete_project(proj['project_id'])
 
     return Response('Project deleted', 200)
 
@@ -99,7 +99,7 @@ def add_existing_project():
 #@return: JSON object contatining project data after checkout
 def checkout_hw_set():
     request_data = request.json
-    proj = db.checkout_hw_set(request_data['user'], request_data['project_name'], request_data['hw_set'], request_data['amount'])
+    proj = db.checkout_hw_set(request_data['project_id'], request_data['hw_set'], request_data['amount'])
 
     if proj is None:
         return Response(dumps({}), 412)
@@ -113,7 +113,7 @@ def checkout_hw_set():
 #@return: JSON object containing project data after checkin
 def checkin_hw_set():
     request_data = request.json
-    proj = db.checkin_hw_set(request_data['user'], request_data['project_name'], request_data['hw_set'], request_data['amount'])
+    proj = db.checkin_hw_set(request_data['project_id'], request_data['hw_set'], request_data['amount'])
 
     if proj is None:
         return Response(dumps({}), 412)

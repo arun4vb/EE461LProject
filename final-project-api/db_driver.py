@@ -1,10 +1,20 @@
 import db
+from bson.json_util import loads
 
-#print(db.get_user_projects('joe'))
-#db.create_project('joe', "Arun's Project", 111, "idk")
-#db.delete_project('joe', "Arun's Project")
-#proj = db.create_project('joe', 'newproject', '111', 'description')
-print(db.checkout_hw_set('joe', "Arun's Project", 'hw_set1', 20))
-print(db.checkin_hw_set('joe', "Arun's Project", 'hw_set2', 20))
-#print(db.checkin_hw_set('joe', 'newproject', 'hw_set1', 20))
-#print(db.checkin_hw_set('joe', 'newproject', 'hw_set2', 20))
+db.create_project('joe', 'joe_project', 'idk')
+projects = loads(db.get_user_projects('joe'))
+project_id = projects['projects'][0]['_id']
+db.add_existing_project('bob', project_id)
+print(db.get_user_projects('joe'))
+print(db.get_user_projects('bob'))
+
+db.checkout_hw_set(project_id, 'hw_set1', 20)
+print(db.get_user_projects('joe'))
+print(db.get_user_projects('bob'))
+db.checkin_hw_set(project_id, 'hw_set1', 20)
+print(db.get_user_projects('joe'))
+print(db.get_user_projects('bob'))
+
+db.delete_project(projects['projects'][0]['_id'])
+print(db.get_user_projects('joe'))
+print(db.get_user_projects('bob'))
