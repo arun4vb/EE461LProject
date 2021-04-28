@@ -23,6 +23,7 @@ class Projects extends Component {
       checkout_num: "",
       description: "",
       checkin_num: "",
+      add_proj_id: "",
       resources: []
     };
     this.handleChange = this.handleChange.bind(this);
@@ -30,6 +31,7 @@ class Projects extends Component {
     this.handleCheckIn = this.handleCheckIn.bind(this);
     this.handleCheckOut = this.handleCheckOut.bind(this);
     this.deleteProject = this.deleteProject.bind(this);
+    this.handleAddProj = this.handleAddProj.bind(this);
   }
 
   //load user projects when component loads
@@ -57,8 +59,7 @@ class Projects extends Component {
 
   deleteProject(project) {
     const request = {
-      'user': this.state.user.username,
-      'project_name': project['project_name']
+      '_id': project['_id']
     }
     //tell server to delete project records
     axios.post('/api/deleteproject', request).then((res) => {
@@ -94,12 +95,10 @@ class Projects extends Component {
     const create_new_proj = {
       user: this.state.user.username,
       project_name: this.state.proj_name,
-      project_id: "1111",
       description: this.state.description,
     };
     const check_out_info = {
-      user: this.state.user.username,
-      project_name: this.state.proj_name,
+      _id: this.state._id,
       hw_set: this.state.hw_set,
       amount: this.state.checkout_num
     };
@@ -135,8 +134,7 @@ class Projects extends Component {
   handleCheckIn(event) {
     event.preventDefault();
     const check_in_info = {
-      user: this.state.user.username,
-      project_name: this.state.proj_name,
+      _id: this.state._id,
       hw_set: this.state.hw_set,
       amount: this.state.checkin_num
     };
@@ -154,8 +152,7 @@ class Projects extends Component {
   handleCheckOut(event) {
     event.preventDefault();
     const check_out_info = {
-      user: this.state.user.username,
-      project_name: this.state.proj_name,
+      _id: this.state._id,
       hw_set: this.state.hw_set,
       amount: this.state.checkout_num
     };
@@ -179,11 +176,28 @@ class Projects extends Component {
 
   helloDetails(project) {
     this.setState({
+      _id: project["_id"],
       proj_name: project["project_name"],
       resources: project["resources"]
     })
     console.log(this.state.proj_name)
     console.log("Resources: " + JSON.stringify(this.state.resources))
+  }
+
+  handleAddProj(event){
+    event.preventDefault();
+    const add_proj = {
+      user: this.state.user.username,
+      _id: this.state.add_proj_id,
+    };
+    console.log("ID: ", this.state.add_proj_id)
+    axios.post("/api/addproject", add_proj).then(res => {
+      axios.post("/api/loadprojects", this.state.user.username).then(res => {
+        const projects = res.data['projects'];
+        this.setState({ projects: projects });
+        console.log("Projects: " + projects)
+      });
+    });
   }
 
   render() {
@@ -192,11 +206,13 @@ class Projects extends Component {
     const proj_name = this.state.proj_name;
     const hw_set = this.state.hw_set;
     const checkout_num = this.state.checkout_num;
+    const add_proj_id = this.state.add_proj_id;
     const description = this.state.description;
     const checkin_num = this.state.checkin_num;
     const resources = this.state.resources;
     let text;
     let button;
+    let add_proj;
     let modal;
     let dashboard;
     let checkin_modal;
@@ -207,6 +223,11 @@ class Projects extends Component {
       button = <div class="create-proj-div"><button type="button" class="btn btn-primary create-new-project" data-toggle="modal" data-target="#exampleModalCenter">
         Create New Project
     </button></div>
+
+      add_proj = <div>
+        <input type="text" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" id="add_proj_id" value={add_proj_id} onChange={this.handleChange}></input>
+        <button type="button" class="btn btn-primary" onClick={this.handleAddProj}>Add Project</button>
+      </div>
 
       modal = <form name="create_proj_modal" onSubmit={this.handleSubmit}><div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="false">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -402,6 +423,7 @@ class Projects extends Component {
 
         {text}
         {button}
+        {add_proj}
         {modal}
         {dashboard}
         {checkin_modal}

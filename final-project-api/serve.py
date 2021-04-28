@@ -85,6 +85,8 @@ def delete_project():
 #@params: username, project id belonging to project
 def add_existing_project():
     request_data = request.json
+    print(request_data['_id'])
+    print(request_data['user'])
     proj = db.add_existing_project(request_data['user'], request_data['_id'])
 
     if proj is None:
