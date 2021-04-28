@@ -18,6 +18,7 @@ class Projects extends Component {
       isLoggedIn: false,
       hw_sets: [],
       proj_name: "",
+      _id: "",
       hw_set: "",
       checkout_num: "",
       description: "",
@@ -171,7 +172,8 @@ class Projects extends Component {
 
   helloCheck(project) {
     this.setState({
-      proj_name: project["project_name"],
+      proj_name: project['proj_name'],
+      _id: project["_id"],
     });
   }
 
@@ -262,7 +264,7 @@ class Projects extends Component {
             <div class="card">
               <div class="card-body">
                 <h5 class="card-title">{project["project_name"]}</h5>
-                <h7 class="card-title">Project ID: {project["project_id"]}</h7>
+                <h7 class="card-title">Project ID: {project["_id"]}</h7>
                 <p class="card-text">Description: {project["description"]}</p>
                 <div onClick={() => this.helloCheck(project)}>
                   <a href="#" class="btn btn-primary check" data-toggle="modal" data-target="#exampleModalCenter1">Check In</a>
