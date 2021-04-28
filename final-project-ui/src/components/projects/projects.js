@@ -97,15 +97,16 @@ class Projects extends Component {
       project_name: this.state.proj_name,
       description: this.state.description,
     };
-    const check_out_info = {
-      _id: this.state._id,
-      hw_set: this.state.hw_set,
-      amount: this.state.checkout_num
-    };
+
     //create project, then checkout if project insertion successful,
     //then reload projects w/ new proj data
     axios.post("/api/createproject", create_new_proj).then(res => {
-      console.log('Hi');
+      const check_out_info = {
+        _id: res.data['_id'],
+        hw_set: this.state.hw_set,
+        amount: this.state.checkout_num
+      };
+
       if (check_out_info['amount'] != '') {
         axios.post("/api/checkout", check_out_info).then(res => {
           console.log('Check Out!')
@@ -192,7 +193,7 @@ class Projects extends Component {
     };
     console.log("ID: ", this.state.add_proj_id)
     axios.post("/api/addproject", add_proj).then(res => {
-      axios.post("/api/loadprojects", this.state.user.username).then(res => {
+      axios.post("/api/loadprojects", this.state.user).then(res => {
         const projects = res.data['projects'];
         this.setState({ projects: projects });
         console.log("Projects: " + projects)

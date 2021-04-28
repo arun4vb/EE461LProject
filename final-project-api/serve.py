@@ -67,9 +67,9 @@ def create_project():
     proj = request.json
     if proj['project_name'] == '':
         return Response("Need Project Name", 412)
-    db.create_project(proj['user'], proj['project_name'], proj['description'])
+    proj = db.create_project(proj['user'], proj['project_name'], proj['description'])
 
-    return Response("Project created", 201)
+    return Response(proj, 201)
 
 @app.route('/api/deleteproject', methods=['POST'])
 #function to delete a user project
@@ -101,6 +101,7 @@ def add_existing_project():
 #@return: JSON object contatining project data after checkout
 def checkout_hw_set():
     request_data = request.json
+    print(request_data)
     proj = db.checkout_hw_set(request_data['_id'], request_data['hw_set'], request_data['amount'])
 
     if proj is None:

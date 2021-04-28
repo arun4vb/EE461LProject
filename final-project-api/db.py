@@ -77,16 +77,21 @@ def validate_password(user, password):
 
 #function to create a new project and store reference in user doc
 def create_project(user, project_name, description):
-    proj = user_projects.insert_one({
+    proj = {
         'user': user,
         'project_name': project_name,
         'description': description,
         'resources': []
-    })
+    }
+
+    inserted_id = user_projects.insert_one(proj).inserted_id
     #store project id in respective user entry
     user_accts.find_one_and_update(
         { 'username': user }, 
-        { '$push': { 'project_ids': proj.inserted_id } })
+        { '$push': { 'project_ids': inserted_id } })
+    
+    proj['_id'] = str(inserted_id)
+    return dumps(proj)
 
 def delete_project(project_id):
     #delete reference to project in user account
@@ -131,7 +136,7 @@ def add_existing_project(username, project_id):
     if user_projects.find_one({ '_id': ObjectId(project_id) }) is None:
         return None
 
-    user_accts.find_one_and_update({ 'username': username },
+    return user_accts.find_one_and_update({ 'username': username },
         { '$push': { 'project_ids': ObjectId(project_id) } }
     )
 
