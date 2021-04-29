@@ -185,7 +185,7 @@ class Projects extends Component {
     console.log("Resources: " + JSON.stringify(this.state.resources))
   }
 
-  handleAddProj(event){
+  handleAddProj(event) {
     event.preventDefault();
     const add_proj = {
       user: this.state.user.username,
@@ -305,6 +305,9 @@ class Projects extends Component {
                 <div onClick={() => this.helloDetails(project)}>
                   <a href="#" class="btn btn-primary details" data-toggle="modal" data-target="#exampleModalCenter3">Details</a>
                 </div>
+                <div onClick={() => this.helloDetails(project)}>
+                  <a href="#" class="btn btn-primary details" data-toggle="modal" data-target="#exampleModalCenter4">Pay Bill</a>
+                </div>
                 <br />
                 <div onClick={() => this.deleteProject(project)}>
                   <a href="#" class="btn btn-primary check" data-toggle={this.deleteProject}>Delete Project</a>
@@ -420,6 +423,83 @@ class Projects extends Component {
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      checkout_modal = <div class="modal fade" id="exampleModalCenter4" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalCenterTitle">Complete Payment</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            
+            <div class="modal-body">
+            <p><b>Payment Information</b></p>
+              <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-default">First Name</span>
+              </div>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="" value={null} onChange={null}></input>
+              </div>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-default">Last Name</span>
+                </div>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="" value={null} onChange={null}></input>
+              </div>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-default">Credit Card Number</span>
+                </div>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="" value={null} onChange={null}></input>
+              </div>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-default">Expiration Date</span>
+                </div>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="" value={null} onChange={null}></input>
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-default">CVV</span>
+                </div>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="" value={null} onChange={null}></input>
+              </div>
+              <p><b>Billing Address</b></p>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-default">Address</span>
+                </div>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="" value={null} onChange={null}></input>
+              </div>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-default">City</span>
+                </div>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="" value={null} onChange={null}></input>
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-default">Zip Code</span>
+                </div>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="" value={null} onChange={null}></input>
+              </div>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-default">State/Province</span>
+                </div>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="" value={null} onChange={null}></input>
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-default">Country</span>
+                </div>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="" value={null} onChange={null}></input>
+              </div>
+            </div>
+            
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-primary" onClick={this.handleCheckOut} data-dismiss="modal">Complete Payment</button>
             </div>
           </div>
         </div>
