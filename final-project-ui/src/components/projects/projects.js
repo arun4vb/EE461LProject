@@ -439,6 +439,10 @@ class Projects extends Component {
             </div>
             
             <div class="modal-body">
+            <p><b>Your total is:</b></p>
+            <p>
+              ($total amount due$)
+            </p>
             <p><b>Payment Information</b></p>
               <div class="input-group mb-3">
               <div class="input-group-prepend">
@@ -486,7 +490,7 @@ class Projects extends Component {
                 <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="" value={null} onChange={null}></input>
               </div>
               <div class="input-group mb-3">
-                <div class="input-group-prepend">
+                <div class="input-group-pr  epend">
                   <span class="input-group-text" id="inputGroup-sizing-default">State/Province</span>
                 </div>
                 <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="" value={null} onChange={null}></input>
