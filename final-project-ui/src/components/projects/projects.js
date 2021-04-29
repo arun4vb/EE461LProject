@@ -201,6 +201,15 @@ class Projects extends Component {
     });
   }
 
+  // handleHardware(){
+  //   console.log("Hardware selected")
+  //   console.log(document.getElementById("selecteId"))
+  //   var hw_select = document.getElementById("selecteId")
+  //   this.setState({
+  //     hw_set: hw_select.value,
+  //   })
+  // }
+
   render() {
     //make sure user is logged in before attempting to render username
     const isLoggedIn = this.state.isLoggedIn;
@@ -252,6 +261,7 @@ class Projects extends Component {
                   <div class="dropdown-menu">
                     {this.state.hw_sets.map(hw => {
                       return <div>
+                        {/* <a class="dropdown-item" href="#" id="selecteId" onClick={this.handleHardware}>{hw["name"]}</a> */}
                         <a class="dropdown-item" href="#">{hw["name"]}</a>
                       </div>
                     })}
