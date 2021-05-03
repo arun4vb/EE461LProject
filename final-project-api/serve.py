@@ -85,8 +85,6 @@ def delete_project():
 #@params: username, project id belonging to project
 def add_existing_project():
     request_data = request.json
-    print(request_data['_id'])
-    print(request_data['user'])
     proj = db.add_existing_project(request_data['user'], request_data['_id'])
 
     if proj is None:
@@ -101,7 +99,6 @@ def add_existing_project():
 #@return: JSON object contatining project data after checkout
 def checkout_hw_set():
     request_data = request.json
-    print(request_data)
     proj = db.checkout_hw_set(request_data['_id'], request_data['hw_set'], request_data['amount'])
 
     if proj is None:

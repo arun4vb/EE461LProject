@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import './App.css';
 import Main from './components/main';
 import Nav from './components/nav-bar/nav-bar'
@@ -30,10 +30,8 @@ export class App extends Component {
     const handleLoggInState = () => {
       var name = link.state.log;
       link.setState({ log: !name })
-      
-
-
     }
+    document.title = 'Snowflake';
 
     return (
 

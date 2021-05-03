@@ -228,6 +228,7 @@ class Projects extends Component {
     let checkin_modal;
     let checkout_modal;
     let details_modal;
+    let billing_modal;
     if (isLoggedIn) {
       text = <h1>Hello, {this.state.user.username}!</h1>;
       button = <div class="create-proj-div"><button type="button" class="btn btn-primary create-new-project" data-toggle="modal" data-target="#exampleModalCenter">
@@ -262,12 +263,12 @@ class Projects extends Component {
                     {this.state.hw_sets.map(hw => {
                       return <div>
                         {/* <a class="dropdown-item" href="#" id="selecteId" onClick={this.handleHardware}>{hw["name"]}</a> */}
-                        <a class="dropdown-item" href="#">{hw["name"]}</a>
+                        <a class="dropdown-item" href="#" onClick={(event) => {this.setState({hw_set: event.currentTarget.textContent})}}>{hw["name"]}</a>
                       </div>
                     })}
                   </div>
                 </div>
-                <input type="text" class="form-control" aria-label="Text input with dropdown button" id="hw_set" value={hw_set} onChange={this.handleChange}></input>
+                <input type="text" class="form-control" aria-label="Text input with dropdown button" id="hw_set" value={hw_set} readOnly={true}></input>
               </div>
               <div class="input-group input-group-sm mb-3">
                 <div class="input-group-prepend">
@@ -334,12 +335,12 @@ class Projects extends Component {
                   <div class="dropdown-menu">
                     {this.state.hw_sets.map(hw => {
                       return <div>
-                        <a class="dropdown-item" href="#">{hw["name"]}</a>
+                        <a class="dropdown-item" href="#" onClick={(event) => {this.setState({hw_set: event.currentTarget.textContent})}}>{hw["name"]}</a>
                       </div>
                     })}
                   </div>
                 </div>
-                <input type="text" class="form-control" aria-label="Text input with dropdown button" id="hw_set" value={hw_set} onChange={this.handleChange}></input>
+                <input type="text" class="form-control" aria-label="Text input with dropdown button" id="hw_set" value={hw_set} readOnly={true}></input>
               </div>
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
@@ -372,12 +373,12 @@ class Projects extends Component {
                   <div class="dropdown-menu">
                     {this.state.hw_sets.map(hw => {
                       return <div>
-                        <a class="dropdown-item" href="#">{hw["name"]}</a>
+                        <a class="dropdown-item" href="#" onClick={(event) => {this.setState({hw_set: event.currentTarget.textContent})}}>{hw["name"]}</a>
                       </div>
                     })}
                   </div>
                 </div>
-                <input type="text" class="form-control" aria-label="Text input with dropdown button" id="hw_set" value={hw_set} onChange={this.handleChange}></input>
+                <input type="text" class="form-control" aria-label="Text input with dropdown button" id="hw_set" value={hw_set} readOnly={true}></input>
               </div>
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
@@ -428,7 +429,7 @@ class Projects extends Component {
         </div>
       </div>
 
-      checkout_modal = <div class="modal fade" id="exampleModalCenter4" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="false">
+      billing_modal = <div class="modal fade" id="exampleModalCenter4" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="false">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -523,6 +524,7 @@ class Projects extends Component {
         {dashboard}
         {checkin_modal}
         {checkout_modal}
+        {billing_modal}
         {details_modal}
         {/* <ul className="list-group">
           {this.state.projects.map(project => (

@@ -85,7 +85,7 @@ class Nav extends Component {
                 <nav class="navbar navbar-expand-lg navbar-light bg-light">
                     <a class="navbar-brand" href="#">
                         <Link to="/">
-                            <img src="http://assets.stickpng.com/thumbs/5846a02acef1014c0b5e47fa.png" width="30" height="30" class="d-inline-block align-top" alt=""></img>
+                            <img src="/Capture.PNG" width="=40" height="40" class="d-inline-block align-top" alt=""></img>
                         </Link>
                     </a>
                     <h4 class="sf-heading">Snowflake</h4>
