@@ -133,12 +133,21 @@ def get_user_projects(username):
 #function to add existing project to user account
 def add_existing_project(username, project_id):
     #make sure project exists before adding to user account
-    if project_id is '' or user_projects.find_one({ '_id': ObjectId(project_id) }) is None:
-        return None
+    try:
+        _id = ObjectId(project_id)
+        if project_id is '' or user_projects.find_one({ '_id': _id }) is None:
+            return None
 
-    return user_accts.find_one_and_update({ 'username': username },
-        { '$push': { 'project_ids': ObjectId(project_id) } }
-    )
+        #make sure user does not already have project added
+        user = user_accts.find_one({ 'username': username })
+        if _id in user['project_ids']:
+            return None 
+
+        return user_accts.find_one_and_update({ 'username': username },
+            { '$push': { 'project_ids': ObjectId(project_id) } }
+        )
+    except:
+        return None
 
 
 

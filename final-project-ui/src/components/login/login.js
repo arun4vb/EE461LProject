@@ -161,7 +161,7 @@ class LoginForm extends React.Component {
               <div className="help-block">Password is required</div>
             }
           </div>
-          <input type="submit" value="submit" class="submit" />
+          <input type="submit" value="submit" class="submit" style={{cursor: "pointer"}} />
         </form>
         { this.state.isLoggedIn ? (<Redirect push to="/"/>) : null }
       </div>
@@ -178,7 +178,9 @@ class RegisterForm extends React.Component {
       username: "",
       email: "",
       password: "",
-      registerError: null
+      registerError: null,
+      submitDisabled: true,
+      opacity: 0.5
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -189,6 +191,20 @@ class RegisterForm extends React.Component {
     this.setState({
       [event.target.id]: event.target.value,
       registerError: ""
+    }, () => {
+      //make sure user cannot submit with an incomplete form
+      if (this.state.username == "" || this.state.email == "" || this.state.password == "") {
+        this.setState({
+          submitDisabled: true,
+          opacity: 0.5
+        });
+      }
+      else {
+        this.setState({
+          submitDisabled: false,
+          opacity: 1.0
+        });
+      }  
     });
   }
 
@@ -208,7 +224,7 @@ class RegisterForm extends React.Component {
       })
     }).catch((response) => {
       this.setState({
-        registerError: "username already taken!"
+        registerError: "email and/or username already taken!"
       });
     });
   }
@@ -219,14 +235,13 @@ class RegisterForm extends React.Component {
           {this.state.registerError &&
             <div id="login-errormsg">{this.state.registerError}</div>}
         <label for="email">email</label>
-        <input type="text" id="email" value={this.state.email} onChange={this.handleChange} />
+        <input placeholder="Required field" type="text" id="email" value={this.state.email} onChange={this.handleChange} />
         <label for="username">username</label>
-        <input type="text" id="username" value={this.state.username} onChange={this.handleChange} />
+        <input placeholder="Required field" type="text" id="username" value={this.state.username} onChange={this.handleChange} />
         <label for="password">password</label>
-        <input type="text" id="password" value={this.state.password} onChange={this.handleChange} />
-        <label for="confirmpassword">confirm password</label>
-        <input type="text" id="confirmpassword" />
-        <input type="submit" value="submit" class="submit" />
+        <input placeholder="Required field" type="text" id="password" value={this.state.password} onChange={this.handleChange} />
+        <input type="submit" value="submit" class="submit" disabled={this.state.submitDisabled} style={
+          this.state.submitDisabled ? {opacity: this.state.opacity, cursor: "default"} : {opacity: this.state.opacity, cursor: "pointer"}} />
       </form>
     );
   }

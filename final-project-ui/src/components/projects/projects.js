@@ -24,7 +24,12 @@ class Projects extends Component {
       description: "",
       checkin_num: "",
       add_proj_id: "",
-      resources: []
+      resources: [],
+
+      //button disabling states
+      submitDisabled: true,
+      checkinDisabled: true,
+      checkoutDisabled: true
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -32,6 +37,7 @@ class Projects extends Component {
     this.handleCheckOut = this.handleCheckOut.bind(this);
     this.deleteProject = this.deleteProject.bind(this);
     this.handleAddProj = this.handleAddProj.bind(this);
+    this.clearInputs = this.clearInputs.bind(this);
   }
 
   //load user projects when component loads
@@ -75,7 +81,7 @@ class Projects extends Component {
     console.log("HANDLE CHANGE CALLED");
     console.log("Project Name: " + this.state.proj_name);
     //only allow numeric entries into checkout amount
-    if (event.target.id === "checkout_num") {
+    if (event.target.id === "checkout_num" || event.target.id === "checkin_num") {
       const re = /^[0-9\b]+$/;
       // if value is not blank, then test the regex
       if (event.target.value === '' || re.test(event.target.value)) {
@@ -87,16 +93,24 @@ class Projects extends Component {
         [event.target.id]: event.target.value
       });
     }
+    //do not allow user to submit unless project name is filled out
+    if (event.target.id === "proj_name") {
+      if (event.target.value === '')
+        this.setState({submitDisabled: true})
+      else {
+        this.setState({submitDisabled: false})
+      }  
+    }
   }
 
   handleSubmit(event) {
-    console.log("Handle Submit");
     event.preventDefault();
     const create_new_proj = {
       user: this.state.user.username,
       project_name: this.state.proj_name,
       description: this.state.description,
     };
+
 
     //create project, then checkout if project insertion successful,
     //then reload projects w/ new proj data
@@ -201,14 +215,16 @@ class Projects extends Component {
     });
   }
 
-  // handleHardware(){
-  //   console.log("Hardware selected")
-  //   console.log(document.getElementById("selecteId"))
-  //   var hw_select = document.getElementById("selecteId")
-  //   this.setState({
-  //     hw_set: hw_select.value,
-  //   })
-  // }
+  //clear form data for new project creation window
+  clearInputs() {
+    this.setState({
+      proj_name: "",
+      hw_set: "",
+      checkout_num: "",
+      description: "",
+      submitDisabled: true
+    });
+  }
 
   render() {
     //make sure user is logged in before attempting to render username
@@ -231,7 +247,7 @@ class Projects extends Component {
     let billing_modal;
     if (isLoggedIn) {
       text = <h1>Hello, {this.state.user.username}!</h1>;
-      button = <div class="create-proj-div"><button type="button" class="btn btn-primary create-new-project" data-toggle="modal" data-target="#exampleModalCenter">
+      button = <div class="create-proj-div"><button type="button" class="btn btn-primary create-new-project" data-toggle="modal" data-target="#exampleModalCenter"onClick={this.clearInputs}>
         Create New Project
     </button></div>
 
@@ -254,7 +270,7 @@ class Projects extends Component {
                 <div class="input-group-prepend">
                   <span class="input-group-text" id="inputGroup-sizing-default">Project Name</span>
                 </div>
-                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="proj_name" value={proj_name} onChange={this.handleChange}></input>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="proj_name" value={proj_name} placeholder="Project name is required" onChange={this.handleChange}></input>
               </div>
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
@@ -285,7 +301,7 @@ class Projects extends Component {
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" onClick={this.handleSubmit} data-dismiss="modal">Create Project</button>
+              <button type="button" class="btn btn-primary" style={this.state.submitDisabled? {cursor: "default"} : {cursor: "pointer"}} disabled={this.state.submitDisabled} onClick={this.handleSubmit} data-dismiss="modal">Create Project</button>
             </div>
           </div>
         </div>

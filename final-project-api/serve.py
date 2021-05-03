@@ -99,6 +99,11 @@ def add_existing_project():
 #@return: JSON object contatining project data after checkout
 def checkout_hw_set():
     request_data = request.json
+    if request_data['hw_set'] == '' or request_data['amount'] == '':
+        return Response(dumps({}), 412)
+    if int(request_data['amount']) <= 0:
+        return Response(dumps({}), 200)
+
     proj = db.checkout_hw_set(request_data['_id'], request_data['hw_set'], request_data['amount'])
 
     if proj is None:
@@ -113,6 +118,8 @@ def checkout_hw_set():
 #@return: JSON object containing project data after checkin
 def checkin_hw_set():
     request_data = request.json
+    if request_data['hw_set'] == '' or request_data['amount'] == '':
+        return Response(dumps({}), 412)
     proj = db.checkin_hw_set(request_data['_id'], request_data['hw_set'], request_data['amount'])
 
     if proj is None:
