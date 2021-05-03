@@ -18,14 +18,14 @@
 ### Projects
 ![snip1](https://user-images.githubusercontent.com/47447913/116938293-24c17d00-ac30-11eb-82a7-22d0aabf09a1.PNG)
 - "Create New Project" allows the user to make a project and (optionally) allocate a certain amount from one hardware set during creation. The user can also add a description to the project.
-![snip6](https://user-images.githubusercontent.com/47447913/116939020-3ce5cc00-ac31-11eb-98b8-19c4f568001c.PNG)
+  ![snip6](https://user-images.githubusercontent.com/47447913/116939020-3ce5cc00-ac31-11eb-98b8-19c4f568001c.PNG)
 
 - Notably, hardware set resource allocation is tied to projects, i.e. checking in and checking out hardware resources happens within the context of a user's project.
 - After creating a project, there are 5 options:
   1. Check out additional resources from any available hardware set.
   2. Check in resources for any hardware set that the user currently has allocated to the project.
   3. View the details of the project, which displays to the user how much of each hardware set is currently allocated to the project.
-![snip4](https://user-images.githubusercontent.com/47447913/116938654-bcbf6680-ac30-11eb-85e4-5233a6836cd2.PNG)
+  ![snip4](https://user-images.githubusercontent.com/47447913/116938654-bcbf6680-ac30-11eb-85e4-5233a6836cd2.PNG)
   4. Delete the project, which removes it from the user's account and automatically returns any remaining checked out resources.
   5. Pay the balance due for the project.
 
